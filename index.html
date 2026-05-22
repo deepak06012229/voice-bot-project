@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hindi + Telugu Multilingual Voice Bot</title>
+    <!-- Google Fonts for premium typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom styling stylesheet -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <i class="fa-solid fa-microphone-lines pulse-icon"></i>
+                <h1>बोलो मित्र <span class="sub-title">| Bolo Mitra</span></h1>
+            </div>
+            <div class="header-badges">
+                <span class="status-indicator-badge">
+                    <span class="status-dot green"></span> Server Online
+                </span>
+                <span class="language-badge">
+                    Hindi + Telugu Voice Bot
+                </span>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Layout -->
+        <main class="app-main">
+            <!-- Left Column: Voice controls & settings -->
+            <section class="control-panel">
+                <!-- Card 1: Voice Control Center (Mic, Visualizer, Transcript) -->
+                <div class="card voice-card">
+                    <h2>Voice Control Center</h2>
+                    <p class="description">Click the microphone button and speak in Hindi, Telugu, or Mixed languages.</p>
+                    
+                    <!-- Microphone & Visualizer Container -->
+                    <div class="mic-visualizer-container">
+                        <!-- Canvas Waveform Visualizer -->
+                        <canvas id="visualizer" class="visualizer-canvas"></canvas>
+                        
+                        <!-- Floating Mic Button -->
+                        <button id="mic-btn" class="mic-button idle" title="Tap to Speak">
+                            <i id="mic-icon" class="fa-solid fa-microphone"></i>
+                        </button>
+                    </div>
+                    <div class="mic-status-label">
+                        <span id="recording-status" class="recording-status">Tap the microphone to start</span>
+                    </div>
+
+                    <!-- Live Transcript Box (Speech-To-Text Output) -->
+                    <div class="transcript-box">
+                        <h3>Live Transcript (Speech-to-Text)</h3>
+                        <div id="live-transcript" class="transcript-placeholder">
+                            Real-time speech-to-text transcript will appear here as you speak...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Voice & TTS Settings Configuration -->
+                <div class="card settings-card">
+                    <h2>Voice Settings</h2>
+                    <div class="settings-grid">
+                        <!-- Recognition Language select -->
+                        <div class="settings-group">
+                            <label for="lang-select"><i class="fa-solid fa-language"></i> STT Input Language:</label>
+                            <select id="lang-select" class="form-control">
+                                <option value="hi-IN" selected>Hindi / Hinglish (India)</option>
+                                <option value="te-IN">Telugu / Telglish (India)</option>
+                                <option value="en-IN">English (India)</option>
+                            </select>
+                        </div>
+
+                        <!-- Speech Synthesis Voice select -->
+                        <div class="settings-group">
+                            <label for="voice-select"><i class="fa-solid fa-volume-high"></i> TTS Reply Voice:</label>
+                            <select id="voice-select" class="form-control">
+                                <option value="">Detecting browser voices...</option>
+                            </select>
+                        </div>
+
+                        <!-- Speech Rate slider -->
+                        <div class="settings-group">
+                            <div class="slider-header">
+                                <label for="rate-range"><i class="fa-solid fa-gauge-high"></i> Speech Speed:</label>
+                                <span id="rate-val" class="badge">1.0x</span>
+                            </div>
+                            <input type="range" id="rate-range" min="0.5" max="2.0" step="0.1" value="1.0" class="slider">
+                        </div>
+
+                        <!-- Speech Pitch slider -->
+                        <div class="settings-group">
+                            <div class="slider-header">
+                                <label for="pitch-range"><i class="fa-solid fa-wave-square"></i> Speech Pitch:</label>
+                                <span id="pitch-val" class="badge">1.0</span>
+                            </div>
+                            <input type="range" id="pitch-range" min="0.5" max="2.0" step="0.1" value="1.0" class="slider">
+                        </div>
+
+                        <!-- Toggle Bot Sound output -->
+                        <div class="settings-group inline-group">
+                            <label class="switch-container">
+                                <input type="checkbox" id="mute-voice">
+                                <span class="checkmark"></span>
+                                <span class="label-text">Mute Bot Voice Output</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Suggestion Phrases -->
+                <div class="card suggestions-card">
+                    <h3>Try Saying:</h3>
+                    <ul class="suggestion-list">
+                        <li><i class="fa-solid fa-comments"></i> <strong>Greetings:</strong> "Hello", "Namaste", or "Namaskaram"</li>
+                        <li><i class="fa-solid fa-id-card"></i> <strong>Identity:</strong> "Who are you?" or "Tumhara naam kya hai?"</li>
+                        <li><i class="fa-solid fa-circle-question"></i> <strong>Help:</strong> "Madad karo" or "Help me"</li>
+                        <li><i class="fa-solid fa-laugh-wink"></i> <strong>Fun:</strong> "Tell me a joke" or "Chutkula sunao"</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Right Column: Chat messages & history logs -->
+            <section class="chat-panel">
+                <!-- Chat Window -->
+                <div class="card chat-card">
+                    <div class="chat-header">
+                        <h2>Chat History</h2>
+                        <div class="chat-header-actions">
+                            <button id="download-btn" class="btn btn-secondary" title="Download logs.txt">
+                                <i class="fa-solid fa-file-arrow-down"></i> Download Logs
+                            </button>
+                            <button id="clear-btn" class="btn btn-danger-outline" title="Clear Chat History">
+                                <i class="fa-solid fa-trash-can"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Messages List -->
+                    <div id="chat-messages" class="chat-messages">
+                        <!-- Welcome message -->
+                        <div class="message bot-message">
+                            <div class="message-bubble">
+                                नमस्ते! నమస్కారం! Hello! I am Bolo Mitra, your multilingual assistant. Tap the microphone and say "Hello", "Help", or "Tell me a joke" to begin!
+                            </div>
+                            <span class="message-time">System</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Bot Speech Synthesis Status -->
+                    <div id="tts-status" class="tts-status">
+                        <i class="fa-solid fa-volume-high fa-beat"></i> <span>Bot is speaking...</span>
+                    </div>
+                </div>
+
+                <!-- Raw logs monitor -->
+                <div class="card logs-card">
+                    <div class="logs-header">
+                        <h3>Saved Logs Monitor (logs.json)</h3>
+                        <button id="refresh-logs" class="btn btn-sm btn-outline">
+                            <i class="fa-solid fa-rotate"></i> Refresh
+                        </button>
+                    </div>
+                    <div id="logs-viewer" class="logs-viewer">
+                        [No log entries loaded]
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Frontend logic script -->
+    <script src="/static/script.js"></script>
+</body>
+</html>
